@@ -8,6 +8,46 @@ class AuthController:
 
     @staticmethod
     def login():
+        """
+        ---
+        tags:
+          - Authentication
+        summary: User login
+        description: Login user and returns a JWT access token.
+        parameters:
+          - in: body
+            name: user
+            description: The username and password for login.
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  example: "testuser"
+                password:
+                  type: string
+                  example: "password123"
+        responses:
+          200:
+            description: Successful login, returns an access token.
+            schema:
+              type: object
+              properties:
+                access_token:
+                  type: string
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          401:
+            description: Invalid credentials
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "Invalid credentials"
+        """
         data = request.get_json()
         username = data.get('username')
         password = data.get('password')
@@ -23,6 +63,61 @@ class AuthController:
         
     @staticmethod
     def create_user():
+        """
+        ---
+        tags:
+          - Authentication
+        summary: Register a new user
+        description: Creates a new user with a username, password, and role.
+        parameters:
+          - in: body
+            name: user
+            description: The user information for registration.
+            schema:
+              type: object
+              required:
+                - username
+                - password
+                - role_id
+              properties:
+                username:
+                  type: string
+                  example: "newuser"
+                password:
+                  type: string
+                  example: "password123"
+                role_id:
+                  type: integer
+                  example: 2
+        responses:
+          201:
+            description: User successfully created.
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "User with name newuser created!"
+          400:
+            description: Missing or invalid parameters.
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: "username, password, role_id are required."
+          409:
+            description: Conflict - User already exists.
+            schema:
+              type: object
+              properties:
+                status:
+                  type: integer
+                  example: 409
+                message:
+                  type: string
+                  example: "User with this name or email already exists."
+        """
         data = request.get_json()
         
         if not data or 'username' not in data or 'password' not in data or 'role_id' not in data:
