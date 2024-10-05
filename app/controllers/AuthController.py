@@ -9,6 +9,7 @@ class AuthController:
     @staticmethod
     def login():
         """
+        Login a user
         ---
         tags:
           - Authentication
@@ -64,10 +65,10 @@ class AuthController:
     @staticmethod
     def create_user():
         """
+        Register a new user
         ---
         tags:
           - Authentication
-        summary: Register a new user
         description: Creates a new user with a username, password, and role.
         parameters:
           - in: body
