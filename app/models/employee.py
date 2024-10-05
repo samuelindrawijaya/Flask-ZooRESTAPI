@@ -16,13 +16,15 @@ class Employee(db.Model):
     # UPDATED TO NULL ABLE join_date field
     join_date = db.Column(db.DateTime, nullable=True, default=datetime.now)
 
-    def to_dict(self):
-        return {
-            'id': self.id,
+    def to_dict(self, include_id=True):
+        employee_dict = {
             'name': self.name,
             'email': self.email,
             'phone_number': self.phone_number,
-            'role': self.role.name,   
+            'role': self.role.name, 
             'schedule': self.schedule,
-            'join_date': self.join_date.strftime('%Y-%m-%d') 
+            'join_date': self.join_date.strftime('%Y-%m-%d') if self.join_date else None
         }
+        if include_id:
+            employee_dict['id'] = self.id
+        return employee_dict

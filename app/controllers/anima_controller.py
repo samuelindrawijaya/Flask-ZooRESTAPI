@@ -25,9 +25,21 @@ class AnimalController:
                                 type: string
                                 description: Animal Name
                                 example: "Lion"
+                            species:
+                                type: string
+                                description: Animal Species
+                                example: "Panthera leo"
+                            age:
+                                type: integer
+                                description: Age of the animal
+                                example: 5
+                            specialRequirement:
+                                type: string
+                                description: Special requirements for the animal
+                                example: "Requires daily sun exposure"
         """
         animals = AnimalDAL.get_all_animals()
-        return jsonify([animal.to_dict() for animal in animals])
+        return jsonify([animal.to_dict(include_id=False) for animal in animals])
 
     @staticmethod
     def get_animal_by_id(id):
@@ -41,7 +53,7 @@ class AnimalController:
               in: path
               type: integer
               required: true
-              description: Search Animal ID 
+              description: Animal ID
         responses:
             200:
                 description: Animal Detail
@@ -54,14 +66,26 @@ class AnimalController:
                             example: 1
                         name:
                             type: string
-                            description: The name of the animal
+                            description: Animal Name
                             example: "Lion"
+                        species:
+                            type: string
+                            description: Animal Species
+                            example: "Panthera leo"
+                        age:
+                            type: integer
+                            description: Age of the animal
+                            example: 5
+                        specialRequirement:
+                            type: string
+                            description: Special requirements
+                            example: "Requires daily sun exposure"
             404:
                 description: Animal not found
         """
         animal = AnimalDAL.get_animal_by_id(id)
         if animal: 
-            return jsonify(animal.to_dict()) 
+            return jsonify(animal.to_dict(include_id=False)) 
         return jsonify({'message': 'Animal not found'}), 404
 
     @staticmethod
@@ -82,6 +106,18 @@ class AnimalController:
                           type: string
                           description: Animal Name
                           example: "Lion"
+                      species:
+                          type: string
+                          description: Animal Species
+                          example: "Panthera leo"
+                      age:
+                          type: integer
+                          description: Animal Age
+                          example: 5
+                      specialRequirement:
+                          type: string
+                          description: Special requirements for the animal
+                          example: "Requires daily sun exposure"
         responses:
             201:
                 description: Animal created successfully
@@ -96,12 +132,27 @@ class AnimalController:
                             type: string
                             description: Animal Name
                             example: "Lion"
+                        species:
+                            type: string
+                            description: Animal Species
+                            example: "Panthera leo"
+                        age:
+                            type: integer
+                            description: Animal Age
+                            example: 5
+                        specialRequirement:
+                            type: string
+                            description: Special requirements
+                            example: "Requires daily sun exposure"
             400:
                 description: Invalid input
         """
         data = request.get_json()
         new_animal = AnimalDAL.create_animal(data)
-        return jsonify(new_animal.to_dict()), 201
+        return jsonify({
+        'message': f'New animal with name {data['name']} succesfully added !.',
+        'animal': new_animal.to_dict(include_id=False)
+        }), 201
 
     @staticmethod
     def update_animal(id):
@@ -126,6 +177,18 @@ class AnimalController:
                           type: string
                           description: New Animal Name
                           example: "Lion"
+                      species:
+                          type: string
+                          description: New Animal Species
+                          example: "Panthera leo"
+                      age:
+                          type: integer
+                          description: New Animal Age
+                          example: 6
+                      specialRequirement:
+                          type: string
+                          description: New special requirements
+                          example: "Needs to be kept in shade during afternoon"
         responses:
             200:
                 description: Updated animal
@@ -140,6 +203,18 @@ class AnimalController:
                             type: string
                             description: Updated Animal Name
                             example: "Lion"
+                        species:
+                            type: string
+                            description: Updated Animal Species
+                            example: "Panthera leo"
+                        age:
+                            type: integer
+                            description: Updated Animal Age
+                            example: 6
+                        specialRequirement:
+                            type: string
+                            description: Updated special requirements
+                            example: "Needs to be kept in shade during afternoon"
             404:
                 description: Animal not found
         """
@@ -147,7 +222,10 @@ class AnimalController:
         updated_animal = AnimalDAL.update_animal(id, data)
         if not updated_animal: 
             return jsonify({'message': 'Animal not found'}), 404
-        return jsonify(updated_animal.to_dict())
+        return jsonify({
+        'message': f'Animal with name {data['name']} succesfully updated !.',
+        'animal': updated_animal.to_dict(include_id=False)
+        }), 201
 
     @staticmethod
     def delete_animal(id):

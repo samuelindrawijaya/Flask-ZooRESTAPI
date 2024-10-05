@@ -7,11 +7,15 @@ class Animal(db.Model):
     name = db.Column(db.String(80), nullable=False )
     species = db.Column(db.String(80), nullable=False)
     age = db.Column(db.Integer, nullable=False)
-
-    def to_dict(self):
-        return {
-            'id': self.id,
+    specialRequirement = db.Column(db.String(200), nullable=True)
+    
+    def to_dict(self, include_id=True):
+        Animal_dict = {
             'name': self.name,
             'species': self.species,
-            'age': self.age
+            'age': self.age,
+            'specialRequirement' : self.specialRequirement
         }
+        if include_id:
+            Animal_dict['id'] = self.id
+        return Animal_dict

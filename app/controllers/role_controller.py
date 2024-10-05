@@ -84,7 +84,10 @@ class RoleController:
             return jsonify({'message': 'Role name is required'}), 400
 
         new_role = RoleDAL.add_role(data['name'])
-        return jsonify(new_role.to_dict()), 201
+        return jsonify({
+        'message': f'Role with name {data['name']} succesfully added !.',
+        'animal': new_role.to_dict()
+        }), 201
 
     @staticmethod
     def update_role(id):
@@ -124,7 +127,10 @@ class RoleController:
 
         updated_role = RoleDAL.update_role(id, data['name'])
         if updated_role:
-            return jsonify(updated_role.to_dict()), 200
+            return jsonify({
+            'message': f'Role with name {data['name']} succesfully updated !.',
+            'animal': updated_role.to_dict()
+            }), 201
         return jsonify({'message': 'Role not found'}), 404
 
     @staticmethod

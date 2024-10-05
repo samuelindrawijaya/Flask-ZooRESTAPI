@@ -15,7 +15,8 @@ class AnimalDAL:
         new_animal = Animal(
             name=data['name'],
             species=data['species'],
-            age=data['age']
+            age=data['age'],
+            specialRequirement=data['specialRequirement']
         )
         db.session.add(new_animal)
         db.session.commit()
@@ -28,6 +29,7 @@ class AnimalDAL:
             animal.name = data.get('name', animal.name)
             animal.species = data.get('species', animal.species)
             animal.age = data.get('age', animal.age)
+            animal.specialRequirement  = data.get('specialRequirement', animal.specialRequirement)
             db.session.commit()
         return animal
 
