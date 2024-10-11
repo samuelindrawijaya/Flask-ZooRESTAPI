@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
-          python-version: 3.12  # Ensure the correct Python version
+          python-version: 3.12
       - name: Install Poetry
         uses: abatilo/actions-poetry@v2
         with:
@@ -28,6 +28,6 @@ jobs:
       - name: Run Tests
         working-directory: .
         env:
-          TEST_POSTGRES_CONNECTION_STRING_TEST: postgresql://testuser:testpassword@localhost:5432/testdb
-          JWT_SECRET_KEY: your_secret_key_here  # Add other environment variables here
+          SQLALCHEMY_DATABASE_URI: postgresql://testuser:testpassword@localhost:5432/testdb
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
         run: poetry run pytest
