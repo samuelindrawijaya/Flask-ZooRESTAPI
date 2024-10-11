@@ -12,20 +12,13 @@ migrate = Migrate()
 load_dotenv()
 def create_app(settings_conf=None):
     app = Flask(__name__)
-
-    # Default to development configuration if none is provided
+    
     os.environ.setdefault("FLASK_SETTINGS_MODULE", "app.Config.dev")
     conf = settings_conf or os.getenv("FLASK_SETTINGS_MODULE")
     
     app.config.from_object(conf)
+    app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
     
-    # Check if testing environment, set specific database for testing
-    if app.config.get('TESTING'):
-        app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('TEST_POSTGRES_CONNECTION_STRING_TEST')
-    else:
-        # For non-test environments, ensure the JWT_SECRET_KEY is set
-        app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
-
     db.init_app(app)
     migrate.init_app(app, db)
     jwt = JWTManager(app)  # Initialize JWT
@@ -34,7 +27,7 @@ def create_app(settings_conf=None):
             "swagger": "2.0",
             "info": {
                 "title": "ZOO API",
-                "description": "ZOO Restful API made by Flask and PostgreSQL @supabase",
+                "description": "ZOO Restfull API made by Flask and postgree @supabase",
                 "contact": {
                 "responsibleOrganization": "ME",
                 "responsibleDeveloper": "Me",
@@ -53,7 +46,7 @@ def create_app(settings_conf=None):
             "security": [
                 {"bearerAuth": []}
             ],
-            "definitions": {
+            "definitions": { # adding data definition
                 "Role": {
                     "type": "object",
                     "properties": {
@@ -104,7 +97,8 @@ def create_app(settings_conf=None):
     def index():
         return redirect('/apidocs/#/')
 
-    from app.routes.api import animal_bp, employee_bp, role_bp, auth_bp  
+    from app.routes.api import animal_bp,employee_bp,role_bp,auth_bp  
+    
     
     app.register_blueprint(animal_bp, url_prefix='/animals')
     app.register_blueprint(employee_bp, url_prefix='/employees')
@@ -112,4 +106,3 @@ def create_app(settings_conf=None):
     app.register_blueprint(auth_bp, url_prefix='/auth')
 
     return app
-
