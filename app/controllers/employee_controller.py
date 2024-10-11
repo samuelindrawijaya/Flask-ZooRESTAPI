@@ -82,7 +82,7 @@ class EmployeeController:
         """
         employee = EmployeeDAL.get_employee_by_id(id)
         if employee: 
-            return jsonify(employee.to_dict(include_id=False)) 
+            return jsonify(employee.to_dict(include_id=False)),200
         else: 
             return jsonify({'message': 'employee not found'}), 404
     
@@ -241,6 +241,6 @@ class EmployeeController:
         """
         deleted = EmployeeDAL.delete_employee(id)
         if deleted:
-            return jsonify({'message': 'employee have been terminated'}), 204
+            return jsonify({'message': 'employee have been terminated'}), 200
         else:
             return jsonify({'message': 'employee not found'}), 404

@@ -1,3 +1,4 @@
+from datetime import timedelta
 from flask import jsonify, request
 from flask_jwt_extended import create_access_token
 from app.DAL.AuthDAL import userDAL
@@ -56,7 +57,10 @@ class AuthController:
         user = User.query.filter_by(username=username).first()
         if user and user.check_password(password):
             role_name = user.role.name
-            access_token = create_access_token(identity={'id' : user.id, 'role' : role_name})
+            access_token = create_access_token(
+              identity={'id' : user.id, 'role' : role_name},
+              expires_delta=timedelta(hours=1)
+            )
             return jsonify({'access_token': access_token}), 200
         else:
             return jsonify({'message': 'Invalid credentials'}), 401

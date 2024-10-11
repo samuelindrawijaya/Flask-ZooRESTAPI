@@ -22,7 +22,7 @@ def token_required(f):
             # Decode the token
             data = jwt.decode(token, Config.JWT_SECRET_KEY, algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
-            return jsonify({'message': 'Token has expired!'}), 403
+            return jsonify({'message': 'Token has expired!'}), 401 # Unathorized
         except jwt.InvalidTokenError:
             return jsonify({'message': 'Token is invalid!'}), 403
 

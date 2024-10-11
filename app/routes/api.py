@@ -3,6 +3,7 @@ from app.controllers.AuthController import AuthController
 from app.controllers.anima_controller import AnimalController
 from app.controllers.employee_controller import EmployeeController
 from app.controllers.role_controller import RoleController
+from app.DAL.AnimalDAL import AnimalDAL
 from app.jwtdecorator import admin_required, token_required 
 
 # Animal Routing 

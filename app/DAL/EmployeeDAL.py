@@ -26,7 +26,7 @@ class EmployeeDAL:
 
     @staticmethod
     def update_employee(id, data):
-        employee = Employee.query.get(id)
+        employee = db.session.get(Employee, id)
         if not employee:
             return None
 
@@ -34,7 +34,7 @@ class EmployeeDAL:
         existing_employee = Employee.query.filter(
             (Employee.name == data['name']) | 
             (Employee.email == data['email'])
-        ).filter(Employee.id != id).first()  # Exclude the current employee being updated
+        ).filter(Employee.id != id).first()  # the filtered data is not the edited data
 
         if existing_employee:
             return None  # if exist true means that there is already employee have name and email

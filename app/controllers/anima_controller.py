@@ -150,7 +150,7 @@ class AnimalController:
         data = request.get_json()
         new_animal = AnimalDAL.create_animal(data)
         return jsonify({
-        'message': f'New animal with name {data['name']} succesfully added !.',
+        'message': f'New animal with name {data['name']} successfully added!',
         'animal': new_animal.to_dict(include_id=False)
         }), 201
 
@@ -248,5 +248,5 @@ class AnimalController:
         """
         deleted = AnimalDAL.delete_animal(id)
         if deleted:
-            return jsonify({'message': 'Animal deleted successfully'}), 204
+            return jsonify({'message': 'Animal deleted successfully'}), 200  
         return jsonify({'message': 'Animal not found'}), 404

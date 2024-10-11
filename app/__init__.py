@@ -1,21 +1,28 @@
 from flask import Flask, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from app.config import Config
 from flask_jwt_extended import JWTManager
 from flasgger import Swagger
+import os
+from dotenv import load_dotenv
+
 
 db = SQLAlchemy()
 migrate = Migrate()
-
-def create_app():
+load_dotenv()
+def create_app(settings_conf=None):
     app = Flask(__name__)
-    app.config.from_object(Config)
+    
+    os.environ.setdefault("FLASK_SETTINGS_MODULE", "app.Config.dev")
+    conf = settings_conf or os.getenv("FLASK_SETTINGS_MODULE")
+    
+    app.config.from_object(conf)
+    app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
     
     db.init_app(app)
     migrate.init_app(app, db)
     jwt = JWTManager(app)  # Initialize JWT
-    swagger = Swagger(app, 
+    Swagger(app, 
     template={
             "swagger": "2.0",
             "info": {
@@ -39,7 +46,7 @@ def create_app():
             "security": [
                 {"bearerAuth": []}
             ],
-            "definitions": {
+            "definitions": { # adding data definition
                 "Role": {
                     "type": "object",
                     "properties": {
@@ -50,6 +57,35 @@ def create_app():
                         "name": {
                             "type": "string",
                             "example": "Admin"
+                        }
+                    }
+                },
+                "Employee": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "integer",
+                            "example": 1
+                        },
+                        "name": {
+                            "type": "string",
+                            "example": "Admin"
+                        },
+                        "email": {
+                            "type": "string",
+                            "example": "Admin@gmail.com"
+                        },
+                        "phone_number": {
+                            "type": "string",
+                            "example": "03444433434"
+                        },
+                        "role_id": {
+                            "type": "string",
+                            "example": "1"
+                        },
+                        "schedule": {
+                            "type": "string",
+                            "example": "Mon - Sun"
                         }
                     }
                 }

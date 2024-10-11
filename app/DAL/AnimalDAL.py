@@ -8,7 +8,8 @@ class AnimalDAL:
 
     @staticmethod
     def get_animal_by_id(id):
-        return Animal.query.get(id)
+        animal = db.session.get(Animal, id)
+        return animal
 
     @staticmethod
     def create_animal(data):
@@ -24,7 +25,7 @@ class AnimalDAL:
 
     @staticmethod
     def update_animal(id, data):
-        animal = Animal.query.get(id)
+        animal = db.session.get(Animal, id)
         if animal:
             animal.name = data.get('name', animal.name)
             animal.species = data.get('species', animal.species)
@@ -35,7 +36,7 @@ class AnimalDAL:
 
     @staticmethod
     def delete_animal(id):
-        animal = Animal.query.get(id)
+        animal = db.session.get(Animal, id)
         if animal:
             db.session.delete(animal)
             db.session.commit()
