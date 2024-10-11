@@ -28,5 +28,5 @@ jobs:
       - name: Run tests
         working-directory: .
         env:
-          TEST_POSTGRES_CONNECTION_STRING_TEST: postgresql://testuser:testpassword@localhost:5432/testdb
+          SUPABASE_TEST_DB_URL: postgresql://testuser:testpassword@localhost:5432/testdb
         run: poetry run pytest
