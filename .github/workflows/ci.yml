@@ -29,4 +29,5 @@ jobs:
         working-directory: .
         env:
           SUPABASE_TEST_DB_URL: postgresql://testuser:testpassword@localhost:5432/testdb
+          JWT_SECRET_KEY: 'YXVkaW5lIGFtZWxseQ=='
         run: poetry run pytest
