@@ -1,10 +1,5 @@
 name: CI-TEST
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+on: push
 
 jobs:
   ci:
@@ -18,28 +13,21 @@ jobs:
           POSTGRES_USER: testuser
           POSTGRES_PASSWORD: testpassword
           POSTGRES_DB: testdb
-        options: >-
-          --health-cmd="pg_isready"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
-          python-version: 3.12  # Ensure Python 3.12 is installed
-
+          python-version: 3.12  # Ensure the correct Python version
       - name: Install Poetry
         uses: abatilo/actions-poetry@v2
         with:
           poetry-version: 1.7.1
-
-      - name: Install dependencies
+      - name: Install Dependencies
+        working-directory: .
         run: poetry install
-
-      - name: Run tests
+      - name: Run Tests
+        working-directory: .
         env:
           TEST_POSTGRES_CONNECTION_STRING_TEST: postgresql://testuser:testpassword@localhost:5432/testdb
+          JWT_SECRET_KEY: your_secret_key_here  # Add other environment variables here
         run: poetry run pytest
