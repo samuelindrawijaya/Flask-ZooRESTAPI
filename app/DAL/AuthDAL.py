@@ -13,6 +13,6 @@ class userDAL:
             db.session.commit()
             return True
         
-        except IntegrityError: # to check if unique violation exist using sqlalchemy
-            db.session.rollback()  
-        return None 
+        except IntegrityError: 
+            db.session.rollback()
+            return 'User with this username already exists'

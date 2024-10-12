@@ -45,3 +45,21 @@ def test_delete_role(client, appjson, generate_fake_roles, auth_token):
 def test_delete_non_existing_role(client, appjson, auth_token):
     response = client.delete("/roles/99999", headers={**appjson, "Authorization": f"Bearer {auth_token}"})
     assert response.status_code == 404  # Not Found
+    
+def test_get_role_by_id_with_invalid_token(client, appjson, generate_fake_roles):
+    # Retrieve the role ID for "Admin"
+    role_id = Role.query.filter_by(name="Admin").first().id
+
+    # Simulate an invalid token scenario
+    invalid_token = "invalid_token_example"  # Use a clearly invalid token
+
+    # Attempt to access the role with the invalid token
+    response = client.get(
+        f"/roles/{role_id}", 
+        headers={**appjson, "Authorization": f"Bearer {invalid_token}"}
+    )
+
+    # Assert that the response status code indicates an unauthorized access
+    assert response.status_code == 403 
+    data = response.get_json()
+    assert data["message"] == "Token is invalid!" 

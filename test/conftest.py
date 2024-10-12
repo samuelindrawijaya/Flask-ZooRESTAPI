@@ -7,6 +7,7 @@ from app import create_app, db
 from app.models.animal import Animal
 from app.models.employee import Employee
 from app.models.role import Role
+from app.models.user import User
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
@@ -62,6 +63,29 @@ def generate_fake_roles(test_db):
     test_db.session.add(role2)
     test_db.session.commit()
     yield
+    
+    
+@pytest.fixture
+def generate_fake_user(test_db):
+    
+    test_db.session.query(User).delete()
+    test_db.session.commit()
+    
+    user1 = User(
+        username="Gajah", 
+        role_id=1, 
+        password_hash = 'gajah123'
+    )
+    user2 = User(
+        username="Leo", 
+        role_id=1, 
+        password_hash = 'leo123'
+    )
+    test_db.session.add(user1)
+    test_db.session.add(user2)
+    test_db.session.commit()
+    
+    return [user1, user2]
 
 @pytest.fixture
 def generate_fake_employees(test_db):

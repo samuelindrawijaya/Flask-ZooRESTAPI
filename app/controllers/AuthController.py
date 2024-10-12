@@ -132,8 +132,13 @@ class AuthController:
 
         if new_user:
             return jsonify({'message': f'User with name {data['username']} created !.'}), 201
+        elif new_user == 'User with this username already exists':
+          return jsonify({
+              'status': 409,
+              'message': 'User with this name or email already exists.'
+          }), 409
         else:
             return jsonify({
-                'status': 409,
-                'message': 'User with this name or email already exists.'
-            }), 409  # The second 400 is the actual HTTP status code.
+                'status': 400,
+                'message': 'Error creating user.'
+            }), 400
